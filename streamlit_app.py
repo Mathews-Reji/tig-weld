@@ -1,18 +1,10 @@
+
+pip install scikit-learn
+
 import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
-
-
-# Install scikit-learn if not already installed
-try:
-    import sklearn
-except ImportError:
-    st.warning("scikit-learn not found. Installing now...")
-    import subprocess
-    subprocess.check_call(["pip", "install", "scikit-learn"])
-    st.success("scikit-learn installed successfully!")
-    st.rerun() # Rerun the app after installation
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
