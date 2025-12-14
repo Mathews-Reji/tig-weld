@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
-import sklearn
+
 
 # Install scikit-learn if not already installed
 try:
