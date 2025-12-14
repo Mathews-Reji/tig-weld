@@ -1,7 +1,21 @@
+%%writefile streamlit_app.py
 import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
+
+# Install scikit-learn if not already installed
+try:
+    import sklearn
+except ImportError:
+    st.warning("scikit-learn not found. Installing now...")
+    import subprocess
+    subprocess.check_call(["pip", "install", "scikit-learn"])
+    st.success("scikit-learn installed successfully!")
+    st.experimental_rerun() # Rerun the app after installation
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 # Set page configuration
 st.set_page_config(layout="wide", page_title="Vickers Microhardness Predictor")
@@ -20,70 +34,6 @@ except FileNotFoundError:
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
-
-# Placeholder for scaler - in a real scenario, the scaler would also be saved/loaded
-# For this demonstration, we'll recreate a dummy scaler that matches the training data properties
-# In a real application, you would save and load the *trained* scaler object.
-
-# Re-creating the scaler based on the original X_train data structure and scaling
-# NOTE: This is a simplification. Ideally, the trained scaler would be saved.
-# Based on kernel state, numerical_cols = ['Current [A]', 'Scan Speed [mm/s]']
-# X_train was scaled with StandardScaler
-# To simulate a loaded scaler, we need min/max or mean/std from the training data.
-# For this exercise, let's assume we have access to the scaler's parameters from training.
-# For proper deployment, always save your scaler object along with the model.
-
-# Let's assume we had a scaler object with these parameters (example values):
-# The original X_train (before scaling) would look like this for numerical columns:
-# Current [A]: mean ~100-104, std ~0-8.4
-# Scan Speed [mm/s]: mean ~1-1.5, std ~0-0.9
-
-# As a temporary measure for this demo, we'll manually define parameters based on the original data's mean and std before scaling
-# In a production setup, you MUST save and load the actual StandardScaler object.
-class DummyScaler:
-    def __init__(self, mean, scale, numerical_cols):
-        self.mean_ = np.array(mean)
-        self.scale_ = np.array(scale)
-        self.numerical_cols = numerical_cols
-
-    def transform(self, X):
-        X_scaled = X.copy()
-        for i, col in enumerate(self.numerical_cols):
-            if col in X_scaled.columns:
-                X_scaled[col] = (X_scaled[col] - self.mean_[i]) / self.scale_[i]
-        return X_scaled
-
-# These values are approximate based on the descriptive statistics of the X_train before scaling
-# A better approach is to load the actual scaler instance.
-# df.describe() shows mean Current [A]: 104, std Current [A]: 8.43
-# df.describe() shows mean Scan Speed [mm/s]: 1.48, std Scan Speed [mm/s]: 0.946
-# We need the mean and std from the *training data before scaling*, not the full df.
-# Let's derive a reasonable approximation based on the original `df`'s numerical columns
-# and assuming `X_train` would have similar stats for `Current [A]` and `Scan Speed [mm/s]`
-
-# We will use the mean and std values of the full original numerical columns as a proxy
-# for the scaler's parameters, as the actual fitted scaler object was not saved.
-# THIS IS NOT IDEAL FOR PRODUCTION, BUT NECESSARY FOR THIS DEMO WITHOUT THE SAVED SCALER.
-
-# Mean and std from df.describe() for numerical columns used in X
-# (Current [A], Scan Speed [mm/s])
-original_numerical_means = {
-    'Current [A]': df['Current [A]'].mean(),
-    'Scan Speed [mm/s]': df['Scan Speed [mm/s]'].mean()
-}
-original_numerical_stds = {
-    'Current [A]': df['Current [A]'].std(),
-    'Scan Speed [mm/s]': df['Scan Speed [mm/s]'].std()
-}
-
-# Create a dummy scaler with these values
-# For `scaler = StandardScaler()` X_train[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
-# The actual mean and std are from X_train *before* scaling.
-# Based on the X_train kernel variable (already scaled), we can't directly get pre-scaled stats.
-# Re-running the preprocessing steps on a temporary dataframe to get scaler parameters
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 
 # Re-create the preprocessing to get the actual scaler state
 temp_df = pd.read_excel('/content/HARDNESS AND UTS.xlsx')
