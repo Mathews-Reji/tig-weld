@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import sklearn
 
 # ---------------- Page Config ----------------
 st.set_page_config(
