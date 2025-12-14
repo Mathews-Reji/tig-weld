@@ -1,6 +1,3 @@
-
-
-
 import streamlit as st
 import pandas as pd
 import pickle
@@ -65,7 +62,7 @@ def preprocess_input(current_val, scan_speed_val, pw_nw_val, scaler):
         'PW/NW_PW',
         'PW/NW_PW- POWDER APPLIED'
     ]
-    
+
     # Create dummy variables for 'PW/NW'
     input_data = pd.get_dummies(input_data, columns=['PW/NW'], drop_first=False)
 
@@ -81,7 +78,7 @@ def preprocess_input(current_val, scan_speed_val, pw_nw_val, scaler):
 
     # Scale numerical features
     input_data[numerical_cols] = scaler.transform(input_data[numerical_cols])
-    
+
     return input_data
 
 processed_input = preprocess_input(current, scan_speed, pw_nw, scaler)
