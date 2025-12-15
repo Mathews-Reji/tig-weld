@@ -42,6 +42,8 @@ scan_speed = st.number_input(
     step=0.1
 )
 
+if scan_speed < 0.2:
+    st.warning("Very low scan speed may result in unreliable predictions.")
 
 # -------------------------------
 # Prediction Button
