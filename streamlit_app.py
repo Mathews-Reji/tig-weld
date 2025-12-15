@@ -32,14 +32,14 @@ pw_nw = 1 if pw_choice == "PW (1)" else 0
 
 current = st.number_input(
     "Current (A)",
-    min_value=100,
-    step=1.0
+    min_value=0.1,
+    step=0.1
 )
 
 scan_speed = st.number_input(
     "Scan Speed (mm/s)",
     min_value=0.1,
-    step=0.1
+    step=1.0
 )
 
 # -------------------------------
